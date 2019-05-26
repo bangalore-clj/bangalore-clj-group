@@ -25,14 +25,14 @@
   (reagent/atom nil))
 
 
-(defn init-fb-config []
-  (reset! firebase-config
-          {:apiKey (System/getenv "FIREBASE_API_KEY")
-           :authDomain (System/getenv "FIREBASE_AUTH_DOMAIN")
-           :databaseURL (System/getenv "FIREBASE_DATABASE_URL")
-           :storageBucket (System/getenv "FIREBASE_STORAGE_BUCKET")
-           :projectId (System/getenv "FIREBASE_PROJECT_ID")
-           :appId (System/getenv "FIREBASE_APP_ID")}))
+#_(defn init-fb-config []
+    (reset! firebase-config
+            {:apiKey (System/getenv "FIREBASE_API_KEY")
+             :authDomain (System/getenv "FIREBASE_AUTH_DOMAIN")
+             :databaseURL (System/getenv "FIREBASE_DATABASE_URL")
+             :storageBucket (System/getenv "FIREBASE_STORAGE_BUCKET")
+             :projectId (System/getenv "FIREBASE_PROJECT_ID")
+             :appId (System/getenv "FIREBASE_APP_ID")}))
 
 
 
@@ -49,8 +49,8 @@
 (defn ^:export init []
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
-  (init-fb-config)
-  (firebase/init :firebase-app-info      (or fb/firebase-config @firebase-config)
+  ;(init-fb-config) ; uncomment this before deploying to Heroku
+  (firebase/init :firebase-app-info      fb/firebase-config ; @firebase-config
                  ; See: https://firebase.google.com/docs/reference/js/firebase.firestore.Settings
                  :firestore-settings     {:timestampsInSnapshots true}
                  :get-user-sub           [::subs/user]

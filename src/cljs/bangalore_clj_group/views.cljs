@@ -220,7 +220,7 @@
                                                                     :content content
                                                                     :venue venue
                                                                     :date pub-date}])
-                        (rfe/push-state ::event))}])
+                        (rfe/push-state ::event {:slug slug}))}])
 
 
 (defn events-list []
@@ -270,16 +270,24 @@
                     :primary true}]]])
 
 
-(defn attendees []
-  (let [as (re-frame/subscribe [::subs/members])]
+(defn attendees [m]
+  (let [as (re-frame/subscribe [:firestore/on-snapshot {:path-collection [m]}])]
     [:div#side-bar
      [:h4 "Attendees"]
-     [:p @as]]))
+     [:p (count (:docs @as))]]))
 
-(defn add-attendee-btn [n e]
+(defn organizers []
+  (let [as (re-frame/subscribe [:firestore/on-snapshot {:path-collection ["members"]
+                                                        :where [[:organizer :== true]]}])]
+    [:div#side-bar
+     [:h4 "Organizers"]
+     [:p (pr-str (:docs @as))]]))
+
+
+(defn add-attendee-btn [m n e w]
   [:div
    [sa/Button {:content "Add"
-               :onClick #(re-frame/dispatch [::events/example-1-set n e])}]])
+               :onClick #(re-frame/dispatch [::events/add-attendee m n e w])}]])
 
 
 (defn attendees-count []
@@ -296,11 +304,11 @@
    [:br]
    [rsvp-form]
    [:br]
-   [add-attendee-btn "Shantanu" "sh@gmail.com"]
+   [add-attendee-btn "may2019meetup" "Shantanu" "sh@gmail.com" ""]
    [:br]
-   [add-attendee-btn "Isha-new" "isha-new@gmail.com"]
+   [attendees "may2019meetup"]
    [:br]
-   [attendees]])
+   [organizers]])
 
 
 (defn event-page []
@@ -422,9 +430,15 @@
     {:name ::events
      :view events-page}]
 
-   ["/event...slug"
+   ["/event/:slug"
     {:name ::event
-     :view event-page}]
+     :view event-page
+     :parameters {:path {:slug string?}}
+     :controllers
+     [{:params (fn [m] (:path (:parameters m))) ; WIP
+       :start (fn [params]
+                (rfe/push-state ::event {:slug (:slug params)}))
+       :stop (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]
 
    ["/contribute"
     {:name ::contribute
@@ -436,7 +450,10 @@
 
    ["/about"
     {:name ::about
-     :view about}]])
+     :view about
+     :controllers
+     [{:start (fn [& params] (do (rfe/push-state ::about) (js/console.log "Entering sub-page 2")))
+       :stop (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]])
 
 
 

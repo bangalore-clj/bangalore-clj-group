@@ -33,9 +33,20 @@
 
 
 (re-frame/reg-event-fx
-  ::example-1-set
-  (fn [_ [_ name email]] {:firestore/set {:path ["members" email]
-                                          :data {:name name
-                                                 :email email}}}))
+  ::add-member
+  (fn [_ [_ name email organizer? web-url]]
+    {:firestore/set {:path ["members" email]
+                     :data {:name name
+                            :email email
+                            :organizer organizer?
+                            :web-profile web-url}}}))
+
+(re-frame/reg-event-fx
+  ::add-attendee
+  (fn [_ [_ meetup name email web-url]]
+    {:firestore/set {:path [meetup email]
+                     :data {:name name
+                            :email email
+                            :web-profile web-url}}}))
 
 

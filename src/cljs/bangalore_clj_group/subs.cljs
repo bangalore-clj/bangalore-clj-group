@@ -52,10 +52,3 @@
   (fn [db _] (:user db)))
 
 
-(re-frame/reg-sub
-  ::members
-  (fn [_ _]
-    (re-frame/subscribe [:firestore/on-snapshot {:path-collection ["members"]}]))
-  (fn [value _]
-    (count (:docs value))))
-
