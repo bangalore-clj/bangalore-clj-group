@@ -122,7 +122,7 @@
                                                                       :content content
                                                                       :topics topics
                                                                       :date pub-date}])
-                        (rfe/push-state ::article))}])
+                        (rfe/push-state ::article {:slug slug}))}])
 
 
 
@@ -134,6 +134,13 @@
        (for [a @articles]
          ^{:key (:title a)}
          [article-card (:slug a) (:title a) (:content a) (:topics a) (:date a)])]]))
+
+
+(defn current-article
+  [slug]
+  (let [es (re-frame/subscribe [::subs/articles])]
+    (some #(if (= slug (:slug %)) %) @es)))
+
 
 
 
@@ -242,6 +249,14 @@
       [events-list]]
      [sa/GridColumn {:width "4"}
       [side-bar]]]]])
+
+
+(defn current-event
+  [slug]
+  (let [es (re-frame/subscribe [::subs/events])]
+    (some #(if (= slug (:slug %)) %) @es)))
+
+
 
 
 (defn event []
@@ -413,18 +428,20 @@
 
 
 ;; Routes
-;; TODOs:
-; Dynamic re-frame event-dispatch when routes gets loaded
-; params in routes
 
 (def routes
   [["/"
     {:name ::home
      :view home}]
 
-   ["/article...slug"
+   ["/article/:slug"
     {:name ::article
-     :view article}]
+     :view article
+     :parameters {:path {:slug string?}}
+     :controllers
+     [{:parameters {:path [:slug]}
+       :start (fn [{:keys [path]}]
+                (re-frame/dispatch-sync [::events/current-article (current-article (:slug path))]))}]}]
 
    ["/events"
     {:name ::events
@@ -435,10 +452,9 @@
      :view event-page
      :parameters {:path {:slug string?}}
      :controllers
-     [{:params (fn [m] (:path (:parameters m))) ; WIP
-       :start (fn [params]
-                (rfe/push-state ::event {:slug (:slug params)}))
-       :stop (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]
+     [{:parameters {:path [:slug]}
+       :start (fn [{:keys [path]}]
+                (re-frame/dispatch-sync [::events/current-event (current-event (:slug path))]))}]}]
 
    ["/contribute"
     {:name ::contribute
@@ -450,10 +466,7 @@
 
    ["/about"
     {:name ::about
-     :view about
-     :controllers
-     [{:start (fn [& params] (do (rfe/push-state ::about) (js/console.log "Entering sub-page 2")))
-       :stop (fn [& params] (js/console.log "Leaving sub-page 2"))}]}]])
+     :view about}]])
 
 
 

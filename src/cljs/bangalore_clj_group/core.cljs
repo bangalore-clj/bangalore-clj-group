@@ -9,6 +9,7 @@
     [reitit.frontend :as rf]
     [reitit.frontend.easy :as rfe]
     [reitit.coercion.spec :as rss]
+    [reitit.frontend.controllers :as rfc]
     [com.degel.re-frame-firebase :as firebase]
     [config.firebase :as fb]))
 
@@ -40,8 +41,11 @@
   (re-frame/clear-subscription-cache!)
   (rfe/start!
     (rf/router v/routes {:data {:coercion rss/coercion}})
-    (fn [m] (reset! v/match m))
-    ;; set to false to enable HistoryAPI
+    ;(fn [m] (reset! v/match m))
+    (fn [new-match]
+      (swap! v/match (fn [old-match]
+                       (if new-match
+                         (assoc new-match :controllers (rfc/apply-controllers (:controllers old-match) new-match))))))
     {:use-fragment true})
   (reagent/render [v/current-page]
                   (.getElementById js/document "app")))
