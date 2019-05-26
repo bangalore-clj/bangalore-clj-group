@@ -1,7 +1,36 @@
 html,
 
 body {
-	font: 18px Montserrat, sans-serif;
+	font: 16px Montserrat, sans-serif;
+	line-height: 1.4em;
+  letter-spacing: 0.5px;
+	background: #FFFFFF;
+	color: #212121;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	font-weight: 300;
+}
+
+.navbar {
+  overflow: hidden;
+  background: linear-gradient(to right, #33ccff 0%, #ff99cc 100%);
+  min-height: 80px;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  padding: 20px 20px;
+  z-index: 9999;
+}
+
+
+#header-container {
+  min-height: 100px;
+}
+
+#main-body {
+	font: 16px Montserrat, sans-serif;
 	line-height: 1.4em;
   letter-spacing: 0.5px;
 	background: #FFFFFF;
@@ -9,6 +38,7 @@ body {
 	min-width: 300px;
 	max-width: 1000px;
 	margin: 0 auto;
+  margin-top: 80px;
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
 	font-smoothing: antialiased;
@@ -16,6 +46,15 @@ body {
   padding: 5px 5px;
 }
 
+#menu {
+  margin: 0 auto;
+  min-height: 100px;
+  overflow-x: auto;
+  display: inline-block;
+  padding: 20px 30px;
+  background: #FAFAFA;
+  box-shadow: 0 4px 6px 0 #BDBDBD;
+}
 
 #content-body {
   margin: 0 auto;
