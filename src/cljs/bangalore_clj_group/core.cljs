@@ -10,7 +10,7 @@
     [reitit.frontend.easy :as rfe]
     [reitit.coercion.spec :as rss]
     [com.degel.re-frame-firebase :as firebase]
-    [bangalore-clj-group.firebase :as fb]))
+    [config.firebase :as fb]))
 
 
 
