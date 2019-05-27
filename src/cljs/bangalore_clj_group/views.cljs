@@ -48,63 +48,57 @@
 
 ;; Header menu
 
-(defn header-old []
-  [:div
-   [sa/Menu {:stackable true
-             :color "teal"
-             :inverted true
-             :size "large"}
-    [sa/Container
-     [sa/MenuItem {}
-      [sa/Image {:src "img/new-logo.png"
-                 :size "mini"
-                 :centered true
-                 :circular true}]]
-     [sa/MenuItem {:content "Bangalore Clojure"
-                   :icon "home"
-                   :active true
-                   :onClick #(println "Good")}]
-     [sa/MenuItem {:content "About"}]]]])
-
-
-(defn header-1 []
-  [:div.navbar
-   [sa/Container
-    [sa/Grid {:stackable true}
-              ;:centered true}
-     [sa/GridRow
-      [sa/GridColumn {:textAlign "left"}
-       [sa/Image {:src "img/new-logo.png"
-                  :size "mini"
-                  :circular true
-                  :centered true}]]
-      [sa/GridColumn {:textAlign "right"}
-       [sa/Button {:content "Bangalore Clojure"
-                   :basic true}]]]]]])
-
-
 (defn header []
-  [:div.navbar
-   [sa/Container {:textAlign "left"}
-     [sa/ButtonGroup
-      [sa/Button {:content "Bangalore Clojure"
-                  :basic true
-                  :onClick #(rfe/push-state ::home)}]
-      [sa/Button {:content "Home"
-                  :basic true
-                  :onClick #(rfe/push-state ::home)}]
-      [sa/Button {:content "Events"
-                  :basic true
-                  :onClick #(rfe/push-state ::events)}]
-      [sa/Button {:content "Learn"
-                  :basic true
-                  :onClick #(rfe/push-state ::learn)}]
-      [sa/Button {:content "Contribute"
-                  :basic true
-                  :onClick #(rfe/push-state ::contribute)}]
-      [sa/Button {:content "About"
-                  :basic true
-                  :onClick #(rfe/push-state ::about)}]]]])
+  (let [s (r/atom "home")]
+    (fn []
+      [:div
+       [sa/Menu {:stackable true
+                 :secondary true
+                 :pointing true
+                 ;:color "blue"
+                 ;:inverted true
+                 :size "large"
+                 :fluid true
+                 :borderless true}
+        [sa/Container
+         [sa/MenuItem
+          [sa/Image {:src "img/new-logo.png"
+                     :circular true
+                     :size "mini"
+                     :onClick #(rfe/push-state ::home)}]]
+         [sa/MenuItem {:content "Bangalore Clojure User Group"
+                       :active (if (= "home" @s) true false)
+                       :color "brown"
+                       :onClick #(do
+                                   (rfe/push-state ::home)
+                                   (reset! s "home"))}]
+         [sa/MenuItem {:content "Events"
+                       :position "right"
+                       :active (if (= "events" @s) true false)
+                       :color "brown"
+                       :onClick #(do
+                                   (rfe/push-state ::events)
+                                   (reset! s "events"))}]
+         [sa/MenuItem {:content "Learn"
+                       :active (if (= "learn" @s) true false)
+                       :color "brown"
+                       :onClick #(do
+                                   (rfe/push-state ::learn)
+                                   (reset! s "learn"))}]
+         [sa/MenuItem {:content "Contribute"
+                       :active (if (= "contribute" @s) true false)
+                       :color "brown"
+                       :onClick #(do
+                                   (rfe/push-state ::contribute)
+                                   (reset! s "contribute"))}]
+         [sa/MenuItem {:content "About"
+                       :active (if (= "about" @s) true false)
+                       :color "brown"
+                       :onClick #(do
+                                   (rfe/push-state ::about)
+                                   (reset! s "about"))}]]]])))
+
+
 
 
 
@@ -479,10 +473,7 @@
 (defn current-page []
   [:div
    [header]
-   [:br]
-   [:br]
-   [:br]
-   [:br]
+   ;[:br]
    (if @match
      (let [view (:view (:data @match))]
        [view @match]))])
