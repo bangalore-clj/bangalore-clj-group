@@ -30,6 +30,18 @@
    (assoc db :user user)))
 
 
+(re-frame/reg-event-db
+ ::add-member-success
+ (fn [db [_ email]]
+   (assoc db :member-added email)))
+
+
+(re-frame/reg-event-db
+ ::add-attendee-success
+ (fn [db [_ email]]
+   (assoc db :attendee-added email)))
+
+
 
 
 (re-frame/reg-event-fx
@@ -39,7 +51,9 @@
                      :data {:name name
                             :email email
                             :organizer organizer?
-                            :web-profile web-url}}}))
+                            :web-profile web-url}
+                     :on-success [::add-member-success email]}}))
+                     ;:on-failure #(prn "Error:" %)}}))
 
 (re-frame/reg-event-fx
   ::add-attendee
@@ -47,6 +61,21 @@
     {:firestore/set {:path [meetup email]
                      :data {:name name
                             :email email
-                            :web-profile web-url}}}))
+                            :web-profile web-url}
+                     :on-success [::add-attendee-success email]}}))
+
+
+
+(re-frame/reg-event-fx
+  ::delete-member
+  (fn [_ [_ email]]
+    {:firestore/set {:path ["members" email]}}))
+
+
+(re-frame/reg-event-fx
+  ::delete-attendee
+  (fn [_ [_ meetup email]]
+    {:firestore/set {:path [meetup email]}}))
+
 
 

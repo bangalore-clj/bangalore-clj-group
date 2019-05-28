@@ -13,20 +13,13 @@ body {
 	font-weight: 300;
 }
 
-.navbar {
-  overflow: hidden;
-  background: linear-gradient(to right, #33ccff 0%, #ff99cc 100%);
-  min-height: 80px;
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
-  padding: 20px 20px;
-  z-index: 9999;
-}
-
 
 #header-container {
-  min-height: 100px;
+  background: linear-gradient(to right, #0D47A1 30%, #00B0FF 100%);
+}
+
+#home-intro-container {
+  background: linear-gradient(to right, #FFAB00 30%, #00B0FF 100%);
 }
 
 #main-body {
@@ -36,9 +29,9 @@ body {
 	background: #FFFFFF;
 	color: #212121;
 	min-width: 300px;
-	max-width: 1000px;
+	max-width: 1100px;
 	margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 50px;
 	-webkit-font-smoothing: antialiased;
 	-moz-font-smoothing: antialiased;
 	font-smoothing: antialiased;
@@ -145,3 +138,5 @@ pre {
     display: block;
     word-wrap: break-word;
 }
+
+

@@ -20,7 +20,12 @@
     :title "This is myfile, This is myfile, This is myfile"
     :content (readfile "md/articles/test-file.md")
     :topics "Clojure | ClojureScript | Programming | Logic Programming"
-    :date "17 12 2019"}])
+    :date "17 12 2019"}
+   {:slug "this-is-another-article"
+    :title "This is another-article, This is another-article, This is another-article"
+    :content (readfile "md/articles/test-file.md")
+    :topics "Clojure | ClojureScript | Programming | Logic Programming"
+    :date "18 12 2019"}])
 
 ;; TODO: write fns to make sure that slug and title are unique
 

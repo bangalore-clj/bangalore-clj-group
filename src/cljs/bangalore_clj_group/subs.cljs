@@ -52,3 +52,12 @@
   (fn [db _] (:user db)))
 
 
+(re-frame/reg-sub
+  ::newly-added-member
+  (fn [db _] (:member-added db)))
+
+(re-frame/reg-sub
+  ::newly-added-attendee
+  (fn [db _] (:attendee-added db)))
+
+
