@@ -25,6 +25,8 @@
 ; Attendees list
 ; Users should be able to UN-RSVP
 
+; dont delete - just mark them
+
 ; the event-venue can be in the description section of the card
 ; and extra-section can be used to highlight upcoming-event and some stats
 
@@ -91,10 +93,16 @@
                        :onClick #(do
                                    (rfe/push-state ::home)
                                    (reset! s "home"))}]
+         [sa/MenuItem {:content "Why Clojure?"
+                       :active (if (= "why-clojure" @s) true false)
+                       :color "green"
+                       :position "right"
+                       :onClick #(do
+                                   (rfe/push-state ::why-clojure)
+                                   (reset! s "why-clojure"))}]
          [sa/MenuItem {:content "Learn"
                        :active (if (= "learn" @s) true false)
                        :color "green"
-                       :position "right"
                        :onClick #(do
                                    (rfe/push-state ::learn)
                                    (reset! s "learn"))}]
@@ -145,7 +153,7 @@
                  :onClick #(rfe/push-state ::articles)}]
      [:div
       [sa/Segment {:size "tiny"
-                   ;:raised true
+                   :raised true
                    ;:color "blue"
                    :style {:overflow "auto" :maxHeight 600}}
        [sa/CardGroup {:stackable true
@@ -169,7 +177,7 @@
 
 (defn article []
   (let [a (re-frame/subscribe [::subs/current-article])]
-    [:div#content-body
+    [:div#article-body
      (render-md (:content @a))]))
 
 
@@ -334,23 +342,41 @@
 
 ;---------
 
+(defn venue-sponsor
+  [name web]
+  [:div
+   [:a {:href web} name]])
+
+
 (defn venue-sponsors
   []
-  [:div#side-bar
-   [:h4 "Meetup Venue Sponsors"]
-   [sa/Divider]
-   [:a {:href ""} "Quintype"]
+  (let [vhs (re-frame/subscribe [::subs/hosts])]
+    [:div#side-bar
+     [:h4 "Venue sponsors"]
+     [sa/Divider]
+     (for [h @vhs]
+       ^{:key (:name h)}
+       [venue-sponsor (:name h) (:web h)])]))
+
+
+(defn job
+  [title web]
+  [:div
+   [:a {:href web} title]
    [:br]
-   [:a {:href ""} "SAP Concur"]
-   [:br]
-   [:a {:href ""} "Go-Jek"]])
+   [:br]])
+
 
 (defn jobs
   []
-  [:div#side-bar
-   [:h4 "Clojure(Script) Jobs"]
-   [sa/Divider]
-   [:a {:href ""} "Clojure Developer in Bangalore"]])
+  (let [js (re-frame/subscribe [::subs/jobs])]
+    [:div#side-bar
+     [:h4 "Clojure(Script) Jobs"]
+     [sa/Divider]
+     (for [j @js]
+       ^{:key (:title j)}
+       [job (:title j) (:web j)])]))
+
 
 
 (defn side-bar
@@ -393,7 +419,7 @@
                  :onClick #(rfe/push-state ::events)}]
      [:div
       [sa/Segment {:size "tiny"
-                   ;:raised true
+                   :raised true
                    ;:color "green"
                    :style {:overflow "auto" :maxHeight 600}}
        [sa/CardGroup {:stackable true
@@ -406,21 +432,14 @@
 ;-----
 (defn home []
   [:div#main-body
-   [:div
-    [sa/Segment
-     ;[sa/Image {:src "img/new-logo.png"
-      ;          :size "small"
-       ;         :floated "left"
-     [:p "This is the bangalore clj group"]]]
-   [:div#main-body
-    [sa/Grid {:stackable true}
-     [sa/GridRow
-      [sa/GridColumn {:width "6"}
-       [articles-list]]
-      [sa/GridColumn {:width "6"}
-       [events-list]]
-      [sa/GridColumn {:width "4"}
-       [side-bar]]]]]])
+   [sa/Grid {:stackable true}
+    [sa/GridRow
+     [sa/GridColumn {:width "6"}
+      [articles-list]]
+     [sa/GridColumn {:width "6"}
+      [events-list]]
+     [sa/GridColumn {:width "4"}
+      [side-bar]]]]])
 
 
 (defn articles-page []
@@ -457,37 +476,36 @@
 
 (defn event []
   (let [e (re-frame/subscribe [::subs/current-event])]
-    [:div#content-body
+    [:div#event-body
      (render-md (:content @e))]))
 
-
-(defn rsvp-form []
-  [:div#side-bar
-   [:h3 "RSVP to Attend"]
-   [sa/Form
-    [sa/FormInput {:placeholder "Name (required)"
-                   :required true
-                   :type "text"}]
-    [sa/FormInput {:placeholder "Email (required)"
-                   :required true
-                   :type "email"}]
-    [sa/FormInput {:placeholder "Web profile (optional)"
-                   :type "url"}]
-    [sa/FormButton {:content "RSVP"
-                    :primary true}]]])
 
 
 (defn attendees [m]
   (let [as (re-frame/subscribe [:firestore/on-snapshot {:path-collection [m]}])]
     [:div#side-bar
-     [:h4 "Attendees"]
-     [:p (count (:docs @as))]]))
+     [:h3 "Attendees"]
+     [sa/Divider]
+     (for [a (:docs @as)]
+       (if (empty? ((:data a) "web-profile"))
+         ^{:key ((:data a) "email")} [:p ((:data a) "name")]
+         ^{:key ((:data a) "email")} [:a {:href ((:data a) "web-profile")} ((:data a) "name")]))]))
+
+
+
+(defn attendees-count [m]
+  (let [as (re-frame/subscribe [:firestore/on-snapshot {:path-collection [m]}])]
+    [:div
+     [sa/Statistic {:color "blue"}
+      [sa/StatisticValue {:content (count (:docs @as))}]
+      [sa/StatisticLabel {:content "attending"}]]]))
+
 
 (defn organizers []
   (let [as (re-frame/subscribe [:firestore/on-snapshot {:path-collection ["members"]
                                                         :where [[:organizer :== true]]}])]
     [:div#side-bar
-     [:h4 "Organizers"]
+     [:h3 "Organizers"]
      [:p (pr-str (:docs @as))]]))
 
 
@@ -497,25 +515,200 @@
                :onClick #(re-frame/dispatch [::events/add-attendee m n e w])}]])
 
 
-(defn attendees-count []
+
+(defn venue-and-date
+  []
+  [:div#side-bar
+   [:h3 "Venue and Date"]
+   [sa/Divider]])
+
+
+
+
+
+;----------
+;----------
+
+(defn rsvp-btn-status
+  [form-open post-form]
+  (cond
+    @form-open "CANCEL"
+    @post-form "DONE"
+    :else "ATTEND"))
+
+(defn rsvp-btn-icon
+  [form-open post-form]
+  (cond
+    (= "CANCEL" (rsvp-btn-status form-open post-form)) "cancel"
+    (= "DONE" (rsvp-btn-status form-open post-form)) "thumbs up"
+    :else "thumbs up"))
+
+(defn rsvp-btn-color
+  [form-open post-form]
+  (cond
+    (= "CANCEL" (rsvp-btn-status form-open post-form)) "grey"
+    (= "DONE" (rsvp-btn-status form-open post-form)) "green"
+    :else "blue"))
+
+
+(defn rsvp-btn [form-open post-form name email web]
   [:div
-   [sa/Statistic {:color "blue"}
-                  ;:horizontal true}
-    [sa/StatisticValue {:content 30}]
-    [sa/StatisticLabel {:content "attending"}]]])
+   [sa/Button {:content (rsvp-btn-status form-open post-form)
+               :icon (rsvp-btn-icon form-open post-form)
+               :size "large"
+               :color (rsvp-btn-color form-open post-form)
+               :fluid true
+               :onClick #(do
+                           (reset! post-form false)
+                           (reset! name "")
+                           (reset! email "")
+                           (reset! web "")
+                           (if @form-open (reset! form-open false) (reset! form-open true)))}]])
+
+
+
+
+(defn rsvp-form [form-open post-form meetup name email web]
+  [:div
+   [sa/Form
+    [sa/FormInput {:label "Name"
+                   :placeholder "Name (required)"
+                   :required true
+                   :type "text"
+                   :onChange #(reset! name (-> % .-target .-value))}]
+    [sa/FormInput {:label "Email"
+                   :placeholder "Email (required)"
+                   :required true
+                   :type "email"
+                   :onChange #(reset! email (-> % .-target .-value))}]
+    [sa/FormInput {:label "Web profile"
+                   :placeholder "Web profile (optional)"
+                   :type "url"
+                   :onChange #(reset! web (-> % .-target .-value))}]
+    [sa/FormButton {:content "ATTEND"
+                    :color "blue"
+                    :fluid true
+                    :icon "thumbs up"
+                    :size "large"
+                    :disabled (if (and (u/name-email? @name @email) (u/is-email? @email)) false true)
+                    :onClick #(do
+                                (re-frame/dispatch [::events/add-attendee meetup (st/trim @name) (st/trim @email) (st/trim @web)])
+                                (do
+                                  (reset! form-open false)
+                                  (reset! post-form true)))}]]])
+
+
+
+(defn rsvp
+  []
+  (let [form-open (r/atom false)
+        post-form (r/atom false)
+        name (r/atom "")
+        email (r/atom "")
+        web (r/atom "")
+        meetup (re-frame/subscribe [::subs/current-event])
+        meetup-title-str (.toLowerCase (apply #'str (st/split (:title @meetup) #" ")))]
+    (fn []
+      [:div;#side-bar
+       [rsvp-btn form-open post-form name email web]
+       (if @form-open
+         [:div [:br] [rsvp-form form-open post-form meetup-title-str name email web]])])))
+
+;---------
+
+(defn withdraw-rsvp-btn-status
+  [form-open post-form]
+  (cond
+    @form-open "CANCEL"
+    @post-form "DONE"
+    :else "WITHDRAW"))
+
+(defn withdraw-rsvp-btn-icon
+  [form-open post-form]
+  (cond
+    (= "CANCEL" (withdraw-rsvp-btn-status form-open post-form)) "cancel"
+    (= "DONE" (withdraw-rsvp-btn-status form-open post-form)) "thumbs up"
+    :else "thumbs down"))
+
+(defn withdraw-rsvp-btn-color
+  [form-open post-form]
+  (cond
+    (= "CANCEL" (withdraw-rsvp-btn-status form-open post-form)) "grey"
+    (= "DONE" (withdraw-rsvp-btn-status form-open post-form)) "green"
+    :else "orange"))
+
+
+(defn withdraw-rsvp-btn [form-open post-form email]
+  [:div
+   [sa/Button {:content (withdraw-rsvp-btn-status form-open post-form)
+               :icon (withdraw-rsvp-btn-icon form-open post-form)
+               :size "large"
+               :basic true
+               :color (withdraw-rsvp-btn-color form-open post-form)
+               :fluid true
+               :onClick #(do
+                           (reset! post-form false)
+                           (reset! email "")
+                           (if @form-open (reset! form-open false) (reset! form-open true)))}]])
+
+
+
+
+(defn withdraw-rsvp-form [form-open post-form meetup email]
+  [:div
+   [sa/Form
+    [sa/FormInput {:label "Email"
+                   :placeholder "Email (required)"
+                   :required true
+                   :type "email"
+                   :onChange #(reset! email (-> % .-target .-value))}]
+    [sa/FormButton {:content "WITHDRAW"
+                    :color "orange"
+                    :fluid true
+                    :icon "thumbs down"
+                    :size "large"
+                    :disabled (if (u/is-email? @email) false true)
+                    :onClick #(do
+                                (re-frame/dispatch [::events/delete-attendee meetup (st/trim @email)])
+                                (do
+                                  (reset! form-open false)
+                                  (reset! post-form true)))}]]])
+
+
+
+(defn withdraw-rsvp
+  []
+  (let [form-open (r/atom false)
+        post-form (r/atom false)
+        email (r/atom "")
+        meetup (re-frame/subscribe [::subs/current-event])
+        meetup-title-str (.toLowerCase (apply #'str (st/split (:title @meetup) #" ")))]
+    (fn []
+      [:div;#side-bar
+       [withdraw-rsvp-btn form-open post-form email]
+       (if @form-open
+         [:div [:br] [withdraw-rsvp-form form-open post-form meetup-title-str email]])])))
+
+;----------
+;----------
+
+
 
 
 (defn event-page-side-bar []
   [:div
-   [attendees-count]
+   [attendees-count "may2019meetup"]
    [:br]
-   [rsvp-form]
+   [rsvp]
    [:br]
-   [add-attendee-btn "may2019meetup" "Shantanu" "sh@gmail.com" ""]
+   [withdraw-rsvp]
    [:br]
-   [attendees "may2019meetup"]
+   [venue-and-date]
    [:br]
-   [organizers]])
+   [attendees "may2019meetup"]])
+
+
+;;; Add DateTime and Venue in the sidebar
 
 
 (defn event-page []
@@ -533,8 +726,7 @@
 
 (defn contribute []
   (let [c (re-frame/subscribe [::subs/contribute])]
-    [:div#content-body
-     [:p "It should work"]
+    [:div#page-body
      (render-md @c)]))
 
 
@@ -583,16 +775,14 @@
 
 (defn about []
   (let [ab (re-frame/subscribe [::subs/about])]
-    [:div#content-body
-     [:p "Hmm"]
+    [:div#page-body
      (render-md @ab)]))
 
 (defn about-old []
   (let [a (re-frame/subscribe [::subs/about])
         c (r/atom "")]
     (fn []
-      [:div#content-body
-       [:p "Hmm"]
+      [:div#page-body
        (render-md @a)
        [:br]
        [sa/Grid
@@ -613,9 +803,16 @@
 
 (defn learn []
   (let [h (re-frame/subscribe [::subs/learn])]
-    [:div#content-body
-     [:p "Is it working"]
-     [:p "Is it working"]
+    [:div#page-body
+     (render-md @h)]))
+
+
+
+;; Why Clojure
+
+(defn why-clojure []
+  (let [h (re-frame/subscribe [::subs/why-clojure])]
+    [:div#page-body
      (render-md @h)]))
 
 
@@ -656,6 +853,10 @@
     {:name ::contribute
      :view contribute}]
 
+   ["/why-clojure"
+    {:name ::why-clojure
+     :view why-clojure}]
+
    ["/learn"
     {:name ::learn
      :view learn}]
@@ -675,7 +876,6 @@
 (defn current-page []
   [:div
    [header]
-   ;[:br]
    (if @match
      (let [view (:view (:data @match))]
        [view @match]))])

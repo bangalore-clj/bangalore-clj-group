@@ -42,9 +42,27 @@
 
 
 (re-frame/reg-sub
+  ::why-clojure
+  (fn [db _]
+    (:why-clojure (:db db))))
+
+
+(re-frame/reg-sub
   ::about
   (fn [db _]
     (:about (:db db))))
+
+
+(re-frame/reg-sub
+  ::hosts
+  (fn [db _]
+    (:venue-hosts (:db db))))
+
+
+(re-frame/reg-sub
+  ::jobs
+  (fn [db _]
+    (:jobs (:db db))))
 
 
 (re-frame/reg-sub

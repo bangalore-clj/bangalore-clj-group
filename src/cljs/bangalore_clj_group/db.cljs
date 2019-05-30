@@ -25,24 +25,29 @@
     :title "This is another-article, This is another-article, This is another-article"
     :content (readfile "md/articles/test-file.md")
     :topics "Clojure | ClojureScript | Programming | Logic Programming"
-    :date "18 12 2019"}])
+    :date "18 12 2019"}
+   {:slug "hack-session-meetup-sep-2018"
+    :title "The hack session during Sept 2018 meetup"
+    :content (readfile "md/articles/meetup-sep-2018.md")
+    :topics "Clojure | ClojureScript | Hackathon"
+    :date "18 9 2018"}])
 
 ;; TODO: write fns to make sure that slug and title are unique
 
 
 (def events
-  [{:slug "this-is-article-one"
-    :title "This is EVENT 1, This is EVENT 1, This is EVENT 1"
+  [{:slug "may-2019-meetup"
+    :title "May 2019 meetup"
     :content (readfile "md/events/event1.md")
     :venue "Clojure | ClojureScript"
     :date "20 12 2018"}
-   {:slug "this-is-article-two"
-    :title "This is EVENT 2, This is EVENT 2, This is EVENT 2"
+   {:slug "dec-2019-meetup"
+    :title "Dec 2018 meetup"
     :content (readfile "md/events/event2.md")
     :venue "Programming | Logic Programming"
     :date "18 12 2018"}
-   {:slug "this-is-article-myfile"
-    :title "This is EVENT, This is EVENT, This is EVENT"
+   {:slug "june-2019-meetup"
+    :title "June 2019 meetup"
     :content (readfile "md/events/event3.md")
     :venue "Clojure | ClojureScript | Programming | Logic Programming"
     :date "17 12 2019"}])
@@ -55,7 +60,29 @@
 
 (defn contribute [] (readfile "md/contribute/contribute.md"))
 (defn learn [] (readfile "md/learn/clojure.md"))
+(defn why-clojure [] (readfile "md/learn/why-clojure.md"))
 (defn about [] (readfile "md/about/about.md"))
+
+
+(def venue-hosts
+  [{:name "Quintype"
+    :web "https://www.quintype.com/"}
+   {:name "SAP Concur"
+    :web "https://www.concur.co.in/"}
+   {:name "Nilenso"
+    :web "https://nilenso.com/"}
+   {:name "Go-Jek Tech"
+    :web "https://www.gojek.io/"}])
+
+
+(def jobs
+  [{:title "Clojure Developer, FormCept, Bangalore"
+    :web "https://www.formcept.com/careers/"}
+   {:title "Clojure Developer, WebEngage, Bangalore & Mumbai"
+    :web "https://webengage.com/current-openings/#op-197822-clojure-programmer"}])
+
+
+;; Hardcoded previous event attendees count
 
 
 ;; Main DB
@@ -65,5 +92,8 @@
    :events (sorted events)
    :contribute (contribute)
    :learn (learn)
-   :about (about)})
+   :why-clojure (why-clojure)
+   :about (about)
+   :venue-hosts venue-hosts
+   :jobs jobs})
 
