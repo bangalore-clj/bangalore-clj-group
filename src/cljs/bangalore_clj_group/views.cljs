@@ -27,6 +27,12 @@
 
 ; dont delete - just mark them
 
+; created and updated attributes in the data moel and in the code
+; sort attendees by alphabatical order
+
+; hyperlinking of attendees on the event oage should also check if the url is a valid url - use clova
+; event page texts and views of side-bar items based on past and future events
+
 ; the event-venue can be in the description section of the card
 ; and extra-section can be used to highlight upcoming-event and some stats
 
@@ -144,17 +150,18 @@
 
 (defn articles-list []
   (let [articles (re-frame/subscribe [::subs/articles])]
-    [:div
+    [:div#home-articles-btn
      [sa/Button {:fluid true
                  :content "ARTICLES"
                  :basic true
-                 :color "blue"
+                 ;:color "blue"
                  :size "large"
                  :onClick #(rfe/push-state ::articles)}]
      [:div
       [sa/Segment {:size "tiny"
                    :raised true
                    ;:color "blue"
+                   :basic true
                    :style {:overflow "auto" :maxHeight 600}}
        [sa/CardGroup {:stackable true
                       :itemsPerRow 1}
@@ -262,7 +269,7 @@
         email (r/atom "")
         web (r/atom "")]
     (fn []
-      [:div#side-bar
+      [:div;#side-bar
        [subscription-btn form-open post-form name email web]
        (if @form-open
          [:div [:br] [subscription-form form-open post-form name email web]])])))
@@ -410,17 +417,18 @@
 
 (defn events-list []
   (let [es (re-frame/subscribe [::subs/events])]
-    [:div
+    [:div#home-events-btn
      [sa/Button {:fluid true
                  :content "EVENTS"
                  :basic true
-                 :color "green"
+                 ;:color "blue"
                  :size "large"
                  :onClick #(rfe/push-state ::events)}]
      [:div
       [sa/Segment {:size "tiny"
                    :raised true
                    ;:color "green"
+                   :basic true
                    :style {:overflow "auto" :maxHeight 600}}
        [sa/CardGroup {:stackable true
                       :itemsPerRow 1}
@@ -433,11 +441,20 @@
 (defn home []
   [:div#main-body
    [sa/Grid {:stackable true}
+    ;[sa/GridRow
+     ;[sa/GridColumn {:width "8"}
+      ;[articles-list]
+     ;[sa/GridColumn {:width "4"}
+      ;[sa/Segment]
+     ;[sa/GridColumn {:width "4"}
+      ;[side-bar]
     [sa/GridRow
      [sa/GridColumn {:width "6"}
-      [articles-list]]
+      [:div#home-articles
+       [articles-list]]]
      [sa/GridColumn {:width "6"}
-      [events-list]]
+      [:div#home-events
+       [events-list]]]
      [sa/GridColumn {:width "4"}
       [side-bar]]]]])
 
