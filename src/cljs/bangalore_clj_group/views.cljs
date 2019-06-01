@@ -135,7 +135,7 @@
 
 (defn article-card [slug title content topics pub-date]
   [sa/Card {:header title
-            :description"this is description"
+            :description "This is description" ; Make it dynamic from db
             :extra topics
             :meta (art-date pub-date)
             :onClick #(do
@@ -402,7 +402,7 @@
 
 (defn event-card [slug title content venue pub-date]
   [sa/Card {:header title
-            :description"this is description"
+            :description "2.45 - 5.30 pm" ; Make it dynamic from db
             :extra (str "Venue: " venue)
             :meta (art-date pub-date)
             :color (if (future-event? pub-date) "green")

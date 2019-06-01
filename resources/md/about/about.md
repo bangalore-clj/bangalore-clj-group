@@ -1,4 +1,4 @@
-## About
+# About
 
 The Bangalore Clojure Group hosts one of the most active (since 2010) Clojure meetups in India. All of our meetups are conducted at different locations with different set of speakers every month. Our meetups are scheduled conveniently on every first Saturday of the month.
 
@@ -13,9 +13,3 @@ Ways to reach us:
 
 Happy Clojuring !
 
-Some of our meetup venue sponsors are:
-
-- SAP Concur
-- Quintype
-- Nilenso
-- Go-Jek

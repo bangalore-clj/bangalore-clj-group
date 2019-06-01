@@ -11,11 +11,11 @@
     :content (readfile "md/articles/articleone.md")
     :topics "Clojure | ClojureScript"
     :date "20 12 2018"}
-   {:slug "this-is-article-two"
-    :title "This is article 2, This is article 2, This is article 2"
+   {:slug "mocking-with-var-redefinition-considered-harmful"
+    :title "Mocking with var redefinition considered harmful"
     :content (readfile "md/articles/art2.md")
     :topics "Programming | Logic Programming"
-    :date "18 12 2018"}
+    :date "31 12 2018"}
    {:slug "this-is-article-myfile"
     :title "This is myfile, This is myfile, This is myfile"
     :content (readfile "md/articles/test-file.md")
@@ -38,18 +38,18 @@
 (def events
   [{:slug "may-2019-meetup"
     :title "May 2019 meetup"
-    :content (readfile "md/events/event1.md")
-    :venue "Clojure | ClojureScript"
+    :content (readfile "md/events/may2019meetup.md")
+    :venue "Quintype, Old Airport Road, Bangalore"
     :date "20 12 2018"}
    {:slug "dec-2019-meetup"
     :title "Dec 2018 meetup"
-    :content (readfile "md/events/event2.md")
-    :venue "Programming | Logic Programming"
+    :content (readfile "md/events/dec2018meetup.md")
+    :venue "SAP Concur"
     :date "18 12 2018"}
    {:slug "june-2019-meetup"
     :title "June 2019 meetup"
-    :content (readfile "md/events/event3.md")
-    :venue "Clojure | ClojureScript | Programming | Logic Programming"
+    :content (readfile "md/events/june2019meetup.md")
+    :venue "Go-Jek Tech, 4th Floor, Tower B, Diamond District, HAL Old Airport Road, Domlur, Bengaluru, Karnataka 560008"
     :date "17 12 2019"}])
 
 

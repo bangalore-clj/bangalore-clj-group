@@ -1,9 +1,8 @@
-# 2. Random copied content
+# Mocking with var redefinition considered harmful
+Shantanu Kumar
 
-Please send a pull-request for's any $ & contribution. Below – are - different ways to contribute. Before sending PRs, please test the changes by running the application on your local machine:
+Many Clojure developers tend to rely on redefining vars for mocking dependencies during testing. While the approach works for very simple cases, it breaks down as soon as the needs become complex. In this post I want to list several kinds of pitfalls with redefining vars for mocking.
+
+##### [Read more](http://charsequence.blogspot.com/2016/12/mocking-with-var-redefinition.html)
 
 
-## Random copied content
-
-
-Please send a pull-request for's any $ & contribution. Below – are - different ways to contribute. Before sending PRs, please test the changes by running the application on your local machine:
