@@ -204,3 +204,7 @@ blockquote {
   max-width: 100%;
   color: #212121;
 }
+
+iframe {
+  max-width: 100%;
+}

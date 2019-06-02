@@ -441,13 +441,6 @@
 (defn home []
   [:div#main-body
    [sa/Grid {:stackable true}
-    ;[sa/GridRow
-     ;[sa/GridColumn {:width "8"}
-      ;[articles-list]
-     ;[sa/GridColumn {:width "4"}
-      ;[sa/Segment]
-     ;[sa/GridColumn {:width "4"}
-      ;[side-bar]
     [sa/GridRow
      [sa/GridColumn {:width "6"}
       [:div#home-articles
