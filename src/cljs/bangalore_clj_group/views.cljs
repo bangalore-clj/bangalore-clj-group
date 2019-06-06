@@ -17,39 +17,11 @@
     [clojure.string :as st]))
 
 
-;;; P1
-;;;-----
-;; Event
-; RSVP enable/disable based on the meetup date
-; RSVP count
-; Attendees list
-; Users should be able to UN-RSVP
 
-; dont delete - just mark them
-
-; created and updated attributes in the data moel and in the code
-; sort attendees by alphabatical order
-
-; hyperlinking of attendees on the event oage should also check if the url is a valid url - use clova
-; event page texts and views of side-bar items based on past and future events
-
-; the event-venue can be in the description section of the card
-; and extra-section can be used to highlight upcoming-event and some stats
-
-; On some page
-; - unsubscribe
-
-; use clova for validation
-
-
-;;; P2
-;;;-----
-; Right side bar can be used for:
-; - sponsors listing with their website hyperlink - a placeholder can be put for now
-; - jobs listing and jobs page after click - a placeholder can be put for now
-
-
-; Auto reminder email to attendees, if possible
+;;; TODOs
+;; Add books of Anuj and Shantanu
+;; Coment out Firebase
+;; Just add a side-bar section hyperlinking the Meetup Group
 
 
 
@@ -99,16 +71,17 @@
                        :onClick #(do
                                    (rfe/push-state ::home)
                                    (reset! s "home"))}]
-         [sa/MenuItem {:content "Why Clojure?"
-                       :active (if (= "why-clojure" @s) true false)
-                       :color "green"
-                       :position "right"
-                       :onClick #(do
-                                   (rfe/push-state ::why-clojure)
-                                   (reset! s "why-clojure"))}]
-         [sa/MenuItem {:content "Learn"
+         ;[sa/MenuItem {:content "Why Clojure?"
+         ;              :active (if (= "why-clojure" @s) true false)
+         ;              :color "green"
+         ;              :position "right"
+         ;              :onClick #(do
+         ;                          (rfe/push-state ::why-clojure)
+         ;                          (reset! s "why-clojure"))}]
+         [sa/MenuItem {:content "Learn Clojure"
                        :active (if (= "learn" @s) true false)
                        :color "green"
+                       :position "right"
                        :onClick #(do
                                    (rfe/push-state ::learn)
                                    (reset! s "learn"))}]

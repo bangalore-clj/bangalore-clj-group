@@ -1,4 +1,6 @@
 # The hack session during Sept 2018 meetup
+Amarjeet
+
 
 We hosted the 2nd episode of the hack-session during this [Sept meetup](https://www.meetup.com/Bangalore-Clojure-User-Group/events/253965766/) at Nilenso office. 1st episode was during the [Aug meetup](https://www.meetup.com/Bangalore-Clojure-User-Group/events/252993263/).
 
