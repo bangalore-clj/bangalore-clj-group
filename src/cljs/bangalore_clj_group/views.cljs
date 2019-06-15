@@ -20,7 +20,7 @@
 
 ;;; TODOs
 ;; Add books of Anuj and Shantanu
-;; Coment out Firebase
+;; Comment out Firebase
 ;; Just add a side-bar section hyperlinking the Meetup Group
 
 
@@ -105,42 +105,48 @@
 
 ;; Articles
 
+(defn art-author [a]
+  (if (not (empty? (st/trim a)))
+    (str "by: " a)))
 
-(defn article-card [slug title content topics pub-date]
+
+(defn article-card [slug title summary content topics pub-date author]
   [sa/Card {:header title
-            :description "This is description" ; Make it dynamic from db
+            :description summary
             :extra topics
-            :meta (art-date pub-date)
+            :meta (str (art-date pub-date) "; " (art-author author))
             :onClick #(do
                         (re-frame/dispatch [::events/current-article {:slug slug
                                                                       :title title
+                                                                      :summary summary
                                                                       :content content
                                                                       :topics topics
-                                                                      :date pub-date}])
+                                                                      :date pub-date
+                                                                      :author author}])
                         (rfe/push-state ::article {:slug slug}))}])
 
 
 
 (defn articles-list []
   (let [articles (re-frame/subscribe [::subs/articles])]
-    [:div#home-articles-btn
-     [sa/Button {:fluid true
-                 :content "ARTICLES"
-                 :basic true
-                 ;:color "blue"
-                 :size "large"
-                 :onClick #(rfe/push-state ::articles)}]
+    ;[:div
+     ;[sa/Button {:fluid true
+     ;            :content "ARTICLES"
+     ;            :basic true
+     ;            ;:color "blue"
+     ;            :size "large"
+     ;            :onClick #(rfe/push-state ::articles)
      [:div
       [sa/Segment {:size "tiny"
                    :raised true
                    ;:color "blue"
                    :basic true
-                   :style {:overflow "auto" :maxHeight 600}}
+                   :style {:overflow "auto" :maxHeight 800}}
        [sa/CardGroup {:stackable true
                       :itemsPerRow 1}
         (for [a @articles]
           ^{:key (:title a)}
-          [article-card (:slug a) (:title a) (:content a) (:topics a) (:date a)])]]]]))
+          [article-card (:slug a) (:title a) (:summary a) (:content a) (:topics a) (:date a) (:author a)])]]]))
 
 
 
@@ -359,10 +365,19 @@
 
 
 
+(defn meetups-link []
+  [:div
+   [sa/Button {:content "( meetups )"
+               :size "large"
+               :color "facebook"
+               :fluid true
+               :onClick #(.open js/window "https://www.meetup.com/Bangalore-Clojure-User-Group/")}]])
+
+
 (defn side-bar
   []
   [:div
-   [subscription]
+   [meetups-link]
    [:br]
    [jobs]
    [:br]
@@ -415,12 +430,12 @@
   [:div#main-body
    [sa/Grid {:stackable true}
     [sa/GridRow
-     [sa/GridColumn {:width "6"}
+     [sa/GridColumn {:width "12"}
       [:div#home-articles
        [articles-list]]]
-     [sa/GridColumn {:width "6"}
-      [:div#home-events
-       [events-list]]]
+     ;[sa/GridColumn {:width "6"}
+     ; [:div#home-events
+     ;  [events-list]]]
      [sa/GridColumn {:width "4"}
       [side-bar]]]]])
 

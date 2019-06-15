@@ -24,11 +24,6 @@
     (assoc db :current-event event)))
 
 
-(re-frame/reg-event-db
- ::set-user
- (fn [db [_ user]]
-   (assoc db :user user)))
-
 
 (re-frame/reg-event-db
  ::add-member-success

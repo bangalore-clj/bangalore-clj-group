@@ -65,10 +65,6 @@
     (:jobs (:db db))))
 
 
-(re-frame/reg-sub
-  ::user
-  (fn [db _] (:user db)))
-
 
 (re-frame/reg-sub
   ::newly-added-member

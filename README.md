@@ -1,11 +1,11 @@
 # [WIP] Bangalore Clojure User Group
 
-This is the code of the [official website]() of Bangalore Clojure User Group.
+This is the code of the [official website]() of Bangalore Clojure User Group. => PageLink will updated
 
 
 ## Contributing to the website
 
-Please check the [Contribution]() page.
+Please check the [Contribution]() page. => PageLink will updated
 
 
 ## Running application in development mode

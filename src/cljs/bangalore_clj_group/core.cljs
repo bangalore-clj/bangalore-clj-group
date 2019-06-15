@@ -53,11 +53,11 @@
 (defn ^:export init []
   (re-frame/dispatch-sync [::events/initialize-db])
   (dev-setup)
-  ;(init-fb-config) ; uncomment this before deploying to Heroku
-  (firebase/init :firebase-app-info      fb/firebase-config ; @firebase-config
-                 ; See: https://firebase.google.com/docs/reference/js/firebase.firestore.Settings
-                 :firestore-settings     {:timestampsInSnapshots true}
-                 :get-user-sub           [::subs/user]
-                 :set-user-event         [::events/set-user])
-                 ;:default-error-handler  [:firebase-error])
+  ;(init-fb-config)
+  ;(firebase/init :firebase-app-info      fb/firebase-config ; @firebase-config
+  ;               ; See: https://firebase.google.com/docs/reference/js/firebase.firestore.Settings
+  ;               :firestore-settings     {:timestampsInSnapshots true}
+  ;               :get-user-sub           [::subs/user]
+  ;               :set-user-event         [::events/set-user])
+  ;               ;:default-error-handler  [:firebase-error])
   (mount-root))
